@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AURA - Modern Personal Command Center</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="cyber-bg"></div>
+
+    <button class="mobile-menu-toggle" id="menuToggle">
+        <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <div class="app-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="brand">
+                <i class="fa-solid fa-shield-halved neon-icon"></i>
+                <h2>AURA <span>v1.0</span></h2>
+            </div>
+            <nav class="nav-menu">
+                <button class="nav-btn active" data-target="dashboard"><i class="fa-solid fa-chart-pie"></i> Core Dashboard</button>
+                <button class="nav-btn" data-target="fitness"><i class="fa-solid fa-dumbbell"></i> Tactical Fitness</button>
+                <button class="nav-btn" data-target="cyber"><i class="fa-solid fa-terminal"></i> Cyber Crypt</button>
+                <button class="nav-btn" data-target="vault"><i class="fa-solid fa-lock"></i> Pass Vault</button>
+                <button class="nav-btn" data-target="study"><i class="fa-solid fa-brain"></i> Study Core</button>
+            </nav>
+            <div class="sidebar-footer">
+                <p>System: <span class="status-online">ONLINE</span></p>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-title">SYSTEM DASHBOARD</div>
+                <div class="system-time" id="live-clock">00:00:00 PM</div>
+            </header>
+
+            <div class="content-body">
+                
+                <section id="dashboard" class="content-section active-section">
+                    <div class="welcome-banner">
+                        <h1>Welcome back, Officer</h1>
+                        <p>System operational. All background sub-routines running smoothly.</p>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <i class="fa-solid fa-bolt card-icon"></i>
+                            <h3>Fitness Level</h3>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" id="core-fit-progress" style="width: 0%;"></div>
+                            </div>
+                            <span id="core-fit-text">0% Efficiency</span>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fa-solid fa-user-shield card-icon"></i>
+                            <h3>Vault Status</h3>
+                            <p class="secure-text">SECURED (AES-256)</p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fa-solid fa-graduation-cap card-icon"></i>
+                            <h3>Study Progress</h3>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" style="width: 40%;"></div>
+                            </div>
+                            <span>40% Target Met</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="fitness" class="content-section">
+                    <h2><i class="fa-solid fa-dumbbell"></i> Tactical Fitness & Merit Tracker</h2>
+                    <div class="grid-2-col">
+                        <div class="modern-card">
+                            <h3>Log Workout</h3>
+                            <form id="fitness-form" class="modern-form">
+                                <div class="input-group">
+                                    <label>Push-ups</label>
+                                    <input type="number" id="pushups" placeholder="E.g. 30" required>
+                                </div>
+                                <div class="input-group">
+                                    <label>Sit-ups</label>
+                                    <input type="number" id="situps" placeholder="E.g. 35" required>
+                                </div>
+                                <div class="input-group">
+                                    <label>1 Mile Run (Mins)</label>
+                                    <input type="number" step="0.01" id="runtime" placeholder="E.g. 7.30" required>
+                                </div>
+                                <button type="submit" class="btn-glow">Log Session</button>
+                            </form>
+                        </div>
+                        <div class="modern-card">
+                            <h3>Performance Log</h3>
+                            <div class="log-table-container">
+                                <table id="fitness-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Pushups</th>
+                                            <th>Situps</th>
+                                            <th>Run</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="fitness-logs">
+                                        </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="cyber" class="content-section">
+                    <h2><i class="fa-solid fa-terminal"></i> Cyber Encryption Matrix</h2>
+                    <div class="modern-card full-width">
+                        <h3>Real-time Hex & Binary Encoder</h3>
+                        <textarea id="crypto-input" placeholder="Type text here to encrypt instantly..."></textarea>
+                        <div class="crypto-outputs">
+                            <div class="output-box">
+                                <label>Binary Stream:</label>
+                                <div id="binary-output" class="terminal-text">---</div>
+                            </div>
+                            <div class="output-box">
+                                <label>Hexadecimal:</label>
+                                <div id="hex-output" class="terminal-text">---</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="vault" class="content-section">
+                    <h2><i class="fa-solid fa-lock"></i> Secured Password Vault</h2>
+                    <div class="grid-2-col">
+                        <div class="modern-card">
+                            <h3>Generate Secure Key</h3>
+                            <button id="gen-pass-btn" class="btn-glow">Generate Strong Key</button>
+                            <input type="text" id="generated-pass" readonly class="terminal-input" style="margin-top:15px; text-align:center;">
+                        </div>
+                        <div class="modern-card">
+                            <h3>Strength Diagnostics</h3>
+                            <input type="text" id="strength-input" placeholder="Type password to test security...">
+                            <div class="strength-meter" style="background: rgba(255,255,255,0.1); height: 8px; border-radius: 4px; margin-top: 15px; overflow: hidden;">
+                                <div id="strength-bar" style="height: 100%; width: 0%; transition: all 0.3s ease; background: #ef4444;"></div>
+                            </div>
+                            <p id="strength-feedback" style="margin-top:10px; font-weight: bold; font-family: 'Orbitron', sans-serif; color: var(--text-muted);">Strength: Waiting...</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="study" class="content-section">
+                    <h2><i class="fa-solid fa-brain"></i> Smart Study Planner & Test Engine</h2>
+                    <div class="grid-2-col">
+                        <div class="modern-card">
+                            <h3>Pomodoro Core Engine</h3>
+                            <div class="pomodoro-display" id="pomodoro-timer" style="text-align: center;">25:00</div>
+                            <div class="btn-group" style="display: flex; justify-content: center; gap: 10px;">
+                                <button id="pomodoro-start" class="btn-action">START</button>
+                                <button id="pomodoro-reset" class="btn-action">RESET</button>
+                            </div>
+                        </div>
+                        
+                        <div class="modern-card" id="mock-test-card">
+                            <h3><i class="fa-solid fa-graduation-cap"></i> Initial Test Prep Module</h3>
+                            <div id="quiz-container" style="margin-top: 15px;">
+                                <p id="quiz-question" style="font-weight: 600; margin-bottom: 15px; color: var(--neon-cyan);">Loading Entry Test Questions...</p>
+                                <div id="quiz-options" style="display: flex; flex-direction: column; gap: 10px;">
+                                    </div>
+                                <div id="quiz-controls" style="margin-top: 15px; display: flex; justify-content: space-between; align-items: center;">
+                                    <span id="quiz-score" style="font-family: 'Orbitron', sans-serif; font-size: 13px;">Score: 0/0</span>
+                                    <button id="next-quiz-btn" class="btn-action" style="display: none; background: var(--neon-blue); color: #000;">Next Question</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="./app.js" type="module"></script>
+
+</body>
+          </html>
+  
