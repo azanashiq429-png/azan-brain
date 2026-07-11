@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "builds": [
-    { "src": "api/gemini.js", "use": "@vercel/node" },
-    { "src": "index.html", "use": "@vercel/static" },
-    { "src": "app.js", "use": "@vercel/static" }
-  ],
+  "cleanUrls": true,
   "routes": [
-    { "src": "/api/gemini", "dest": "api/gemini.js" },
-    { "src": "/(.*)", "dest": "/$1" }
+    { "src": "/api/gemini", "dest": "/api/gemini.js" },
+    { "src": "/css/(.*)", "dest": "/css/$1" },
+    { "src": "/js/(.*)", "dest": "/js/$1" },
+    { "src": "/app.js", "dest": "/app.js" },
+    { "src": "/style.css", "dest": "/style.css" },
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
