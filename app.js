@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     
     // ==========================================
-    // 0. CENTRAL SECURE API ROUTER (FIXED)
+    // 0. CENTRAL SECURE API ROUTER
     // ==========================================
     async function callSecureAI(promptText) {
         // Direct link to our Vercel Serverless Function
@@ -229,7 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ==========================================
-    // 8. STUDY CORE: LIVE GEMINI INTEL TEST ENGINE (FIXED)
+    // 8. STUDY CORE: LIVE ADVANCED TEACHER TEST ENGINE
     // ==========================================
     let aiQuestions = [];
     let currentQuizIndex = 0;
@@ -242,16 +242,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function fetchQuestionsFromGemini() {
         if (!qQuestion || !qOptions) return;
-        qQuestion.innerText = "🤖 AI Routing active. Generating intelligence evaluations...";
-        qOptions.innerHTML = "<div style='color: #00e5ff; text-align:center; padding:20px; font-weight:bold;'>🔄 SYNCING SERVERLESS MATRIX...</div>";
+        qQuestion.innerText = "🤖 AI Instructor is setting up a new exam sheet...";
+        qOptions.innerHTML = "<div style='color: #00e5ff; text-align:center; padding:20px; font-weight:bold;'>🔄 GENERATING TACTICAL INTEL QUIZ...</div>";
         if(qNextBtn) qNextBtn.style.display = "none";
 
-        const promptText = `Generate exactly 5 unique multiple choice questions for a military initial academic test. Mix Verbal Intelligence, 10th-grade Biology, and English Present Tenses. Provide raw JSON output matching this structure, with no markdown code blocks: [{"q": "Question?", "o": ["A", "B", "C", "D"], "a": 0}]`;
+        // Advance Professional Teacher Prompt Matrix Rule
+        const promptText = `You are an expert military academy instructor testing a 10th-grade candidate. 
+        Generate exactly 5 highly unique, high-quality multiple-choice questions. 
+        Do not repeat old questions. Mix these exact categories dynamically:
+        1. 10th-Grade Biology (Chapters like Gaseous Exchange, Homeostasis, Coordination, or Inheritance).
+        2. Verbal Intelligence (Pattern completion, coding-decoding, logical puzzles, analogies).
+        3. English Grammar (Present, Past, Future tenses, active/passive voice, correct prepositions).
+        
+        Provide strictly raw JSON output inside a bracket syntax array with absolutely no markdown wrapping, no backticks, and no conversation. 
+        Format structure must match this exactly: 
+        [{"q": "Teacher Question Text?", "o": ["Option A", "Option B", "Option C", "Option D"], "a": 0}]`;
 
         try {
             let cleanedJsonText = await callSecureAI(promptText);
             
-            // Markdown backticks remove karne ke liye safe cleanup logic
+            // Clean markdown blocks if any
             cleanedJsonText = cleanedJsonText.replace(/```json/gi, "").replace(/```/g, "").trim();
             
             const startIdx = cleanedJsonText.indexOf('[');
@@ -328,4 +338,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
     fetchQuestionsFromGemini();
 });
-                                                                              
+                
