@@ -4,20 +4,20 @@ document.addEventListener("DOMContentLoaded", () => {
     // 0. CENTRAL SECURE API ROUTER (FIXED)
     // ==========================================
     async function callSecureAI(promptText) {
+        // Direct link to our Vercel Serverless Function
         const response = await fetch("/api/gemini", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ prompt: promptText })
         });
-        const data = await response.json();
-        if (data.error) throw new Error(data.error);
         
-        // Directly handle string conversion safely without raw regex block crash
-        let cleanText = data.result || "";
-        if (cleanText.includes("```")) {
-            cleanText = cleanText.replace(/```json/gi, "").replace(/```/g, "").trim();
+        if (!response.ok) {
+            const errData = await response.json();
+            throw new Error(errData.error || "Network matrix breakdown");
         }
-        return cleanText.trim();
+
+        const data = await response.json();
+        return data.result;
     }
 
     // ==========================================
@@ -243,25 +243,31 @@ document.addEventListener("DOMContentLoaded", () => {
     async function fetchQuestionsFromGemini() {
         if (!qQuestion || !qOptions) return;
         qQuestion.innerText = "🤖 AI Routing active. Generating intelligence evaluations...";
-        qOptions.innerHTML = "<div style='color: #06b6d4; text-align:center; padding:20px;'>🔄 SYNCING SERVERLESS MATRIX...</div>";
+        qOptions.innerHTML = "<div style='color: #00e5ff; text-align:center; padding:20px; font-weight:bold;'>🔄 SYNCING SERVERLESS MATRIX...</div>";
         if(qNextBtn) qNextBtn.style.display = "none";
 
-        const promptText = `Generate exactly 5 unique multiple choice questions for a military initial academic test. Mix Verbal Intelligence, 10th-grade Biology core systems, and English Present Tenses. You must output strictly raw JSON array text inside bracket syntax, no extra talk, no markdown. Format: [{"q": "Question?", "o": ["A", "B", "C", "D"], "a": 0}]`;
+        const promptText = `Generate exactly 5 unique multiple choice questions for a military initial academic test. Mix Verbal Intelligence, 10th-grade Biology, and English Present Tenses. Provide raw JSON output matching this structure, with no markdown code blocks: [{"q": "Question?", "o": ["A", "B", "C", "D"], "a": 0}]`;
 
         try {
-            const cleanedJsonText = await callSecureAI(promptText);
+            let cleanedJsonText = await callSecureAI(promptText);
+            
+            // Markdown backticks remove karne ke liye safe cleanup logic
+            cleanedJsonText = cleanedJsonText.replace(/```json/gi, "").replace(/```/g, "").trim();
+            
             const startIdx = cleanedJsonText.indexOf('[');
             const endIdx = cleanedJsonText.lastIndexOf(']');
             
             if (startIdx === -1 || endIdx === -1) {
-                throw new Error("Invalid JSON layout packet structure");
+                throw new Error("Invalid structure format");
             }
             
-            aiQuestions = JSON.parse(cleanedJsonText.substring(startIdx, endIdx + 1));
+            cleanedJsonText = cleanedJsonText.substring(startIdx, endIdx + 1);
+            aiQuestions = JSON.parse(cleanedJsonText);
+            
             currentQuizIndex = 0;
             loadQuizQuestion();
         } catch (error) {
-            console.error(error);
+            console.error("Quiz Sync Crash:", error);
             qQuestion.innerText = "❌ Secure Connection Protocol Reset Required.";
             qOptions.innerHTML = "<button id='retry-ai-btn' style='width:100%; padding:12px; background:#00e5ff; color:#000; border:none; border-radius:6px; font-weight:bold; cursor:pointer;'>Re-Initialize Matrix</button>";
             const retryBtn = document.getElementById("retry-ai-btn");
@@ -322,4 +328,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
     fetchQuestionsFromGemini();
 });
-            
+                                                                              
