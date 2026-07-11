@@ -1,22 +1,18 @@
 export default async function handler(req, res) {
-    // 1. Core CORS Header Matrix Setup
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
     res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
 
-    // Handle preflight OPTIONS network requests
     if (req.method === 'OPTIONS') {
         return res.status(200).end();
     }
 
-    // Only allow secure inbound POST actions
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
     try {
-        // Safe Parse Block: Ensure JSON payload structure is verified
         let bodyData = req.body;
         if (typeof bodyData === 'string') {
             bodyData = JSON.parse(bodyData);
@@ -24,10 +20,10 @@ export default async function handler(req, res) {
 
         const prompt = bodyData.prompt;
         if (!prompt) {
-            return res.status(400).json({ error: "Missing required prompt text payload" });
+            return res.status(400).json({ error: "Missing required prompt payload" });
         }
 
-        // Secret Key Sync Protocol
+        // Dashboard se variable read hoga, code me leak nahi hoga
         const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
         if (!GEMINI_API_KEY) {
             return res.status(500).json({ error: "API Key Configuration Missing on Vercel Settings!" });
@@ -44,14 +40,14 @@ export default async function handler(req, res) {
         const data = await response.json();
         
         if (!data.candidates || !data.candidates[0].content.parts[0].text) {
-            return res.status(500).json({ error: "Invalid response structure from Google AI Matrix" });
+            return res.status(500).json({ error: "Invalid response layout structure from Google AI Matrix" });
         }
 
         let aiText = data.candidates[0].content.parts[0].text;
         return res.status(200).json({ result: aiText });
         
     } catch (error) {
-        return res.status(500).json({ error: "Backend Integration Parsing Failure", details: error.message });
+        return res.status(500).json({ error: "Backend Parsing Failure", details: error.message });
     }
-                                         }
-            
+            }
+                                                        
