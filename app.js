@@ -1,10 +1,9 @@
 document.addEventListener("DOMContentLoaded", () => {
     
     // ==========================================
-    // 0. CENTRAL SECURE API ROUTER
+    // 0. CENTRAL SECURE API ROUTER (FIXED)
     // ==========================================
     async function callSecureAI(promptText) {
-        // Points directly to our Vercel Serverless Function
         const response = await fetch("/api/gemini", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -12,7 +11,13 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         const data = await response.json();
         if (data.error) throw new Error(data.error);
-        return data.result.replace(/```json/gi, "").replace(/```/g, "").trim();
+        
+        // Directly handle string conversion safely without raw regex block crash
+        let cleanText = data.result || "";
+        if (cleanText.includes("```")) {
+            cleanText = cleanText.replace(/```json/gi, "").replace(/```/g, "").trim();
+        }
+        return cleanText.trim();
     }
 
     // ==========================================
@@ -110,7 +115,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const coreTxt = document.getElementById("core-fit-text");
         if (coreBar) coreBar.style.width = progressPercent + "%";
         
-        // AI Fitness Coach integration inside UI calculation
         if (coreTxt) {
             coreTxt.innerText = `Analyzing Matrix Metrics...`;
             setTimeout(async () => {
@@ -225,7 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ==========================================
-    // 8. STUDY CORE: LIVE GEMINI INTEL TEST ENGINE
+    // 8. STUDY CORE: LIVE GEMINI INTEL TEST ENGINE (FIXED)
     // ==========================================
     let aiQuestions = [];
     let currentQuizIndex = 0;
@@ -242,16 +246,22 @@ document.addEventListener("DOMContentLoaded", () => {
         qOptions.innerHTML = "<div style='color: #06b6d4; text-align:center; padding:20px;'>🔄 SYNCING SERVERLESS MATRIX...</div>";
         if(qNextBtn) qNextBtn.style.display = "none";
 
-        const promptText = `Generate exactly 5 unique multiple choice questions for a military initial academic test. Mix Verbal Intelligence, 10th-grade Biology, and English Present Tenses. Raw JSON format only: [{"q": "Question Text", "o": ["A", "B", "C", "D"], "a": 0}]`;
+        const promptText = `Generate exactly 5 unique multiple choice questions for a military initial academic test. Mix Verbal Intelligence, 10th-grade Biology core systems, and English Present Tenses. You must output strictly raw JSON array text inside bracket syntax, no extra talk, no markdown. Format: [{"q": "Question?", "o": ["A", "B", "C", "D"], "a": 0}]`;
 
         try {
             const cleanedJsonText = await callSecureAI(promptText);
             const startIdx = cleanedJsonText.indexOf('[');
             const endIdx = cleanedJsonText.lastIndexOf(']');
+            
+            if (startIdx === -1 || endIdx === -1) {
+                throw new Error("Invalid JSON layout packet structure");
+            }
+            
             aiQuestions = JSON.parse(cleanedJsonText.substring(startIdx, endIdx + 1));
             currentQuizIndex = 0;
             loadQuizQuestion();
         } catch (error) {
+            console.error(error);
             qQuestion.innerText = "❌ Secure Connection Protocol Reset Required.";
             qOptions.innerHTML = "<button id='retry-ai-btn' style='width:100%; padding:12px; background:#00e5ff; color:#000; border:none; border-radius:6px; font-weight:bold; cursor:pointer;'>Re-Initialize Matrix</button>";
             const retryBtn = document.getElementById("retry-ai-btn");
@@ -273,6 +283,7 @@ document.addEventListener("DOMContentLoaded", () => {
             btn.style.width = "100%"; btn.style.padding = "12px"; btn.style.margin = "5px 0";
             btn.style.background = "rgba(255,255,255,0.04)"; btn.style.border = "1px solid rgba(255,255,255,0.1)";
             btn.style.borderRadius = "6px"; btn.style.color = "#fff"; btn.style.cursor = "pointer";
+            btn.style.transition = "all 0.2s ease";
             
             btn.addEventListener("click", () => {
                 const correctIndex = aiQuestions[currentQuizIndex].a;
@@ -311,4 +322,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
     fetchQuestionsFromGemini();
 });
-              
+            
